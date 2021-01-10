@@ -24,14 +24,13 @@ public class Admin {
 	public Admin() {
 
 	}
-	
 
 	public Admin(int adminId, String adminUsername, String adminPassword) {
+
 		this.adminId = adminId;
 		this.adminUsername = adminUsername;
 		this.adminPassword = adminPassword;
 	}
-
 
 	public int getAdminId() {
 		return adminId;
