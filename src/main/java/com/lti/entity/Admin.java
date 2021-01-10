@@ -7,19 +7,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="admin_detail")
+@Table(name = "admin_detail")
 public class Admin {
 
 	@Id
 	@GeneratedValue
-	@Column(name="admin_id")
+	@Column(name = "admin_id")
 	private int adminId;
-	
-	@Column(name="admin_username")
+
+	@Column(name = "admin_username")
 	private String adminUsername;
-	
-	@Column(name="admin_password")
+
+	@Column(name = "admin_password")
 	private String adminPassword;
+
+	public Admin() {
+
+	}
 
 	public int getAdminId() {
 		return adminId;
@@ -44,6 +48,5 @@ public class Admin {
 	public void setAdminPassword(String adminPassword) {
 		this.adminPassword = adminPassword;
 	}
-	
-	
+
 }
