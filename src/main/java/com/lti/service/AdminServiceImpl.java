@@ -2,49 +2,44 @@ package com.lti.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import com.lti.dao.GenericDao;
 import com.lti.entity.Flight;
+import com.lti.function.MiscFunction;
 
-@Repository
+@Service
 public class AdminServiceImpl implements AdminService {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	@Autowired
+	GenericDao dao;
+
+	@Autowired
+	MiscFunction function;
 
 	@Override
-	@Transactional
 	public void addFlight(Flight flight) {
-
-		entityManager.merge(flight);
-		
+		flight.setDuration(function.calcDuration(flight.getDeparture(), flight.getArrival()));
+		dao.save(flight);
 	}
 
 	@Override
 	public Flight displayFlight(int flightId) {
-		Flight flight =  entityManager.find(Flight.class, flightId);
+		Flight flight = dao.fetchById(Flight.class, flightId);
 		return flight;
-		//return null;
 	}
 
 	@Override
 	public void deleteFight(int flightId) {
-
-		//Flight flight = hibernateTemplate.load(Flight.class, flightId);
-		//hibernateTemplate.delete(flight);
+		Flight flight = dao.fetchById(Flight.class, flightId);
+		dao.delete(flight);
 	}
 
 	@Override
 	public List<Flight> displayAllFlights() {
-		//List<Flight> flight = hibernateTemplate.loadAll(Flight.class);
-		//return flight;
-		return null;
+		List<Flight> flightList = dao.fetchAll(Flight.class);
+		return flightList;
 	}
 
 }

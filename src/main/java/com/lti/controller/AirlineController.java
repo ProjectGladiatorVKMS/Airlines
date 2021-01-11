@@ -21,12 +21,9 @@ public class AirlineController {
 	@Autowired
 	private AdminService adminService;
 
+	//Incomplete
 	@PostMapping("/addFlight")
 	public String addFlight(@RequestBody Flight flight) {
-		//Admin admin = new Admin();
-		// admin.setAdminId(flight.getAdmin().getAdminId());
-		//admin.setAdminId(1);
-		//flight.setAdmin(admin);
 		adminService.addFlight(flight);
 
 		return null;
@@ -48,7 +45,7 @@ public class AirlineController {
 	public Flight displayFlight(@RequestParam("id") int flightId) {
 		System.out.println(flightId);
 		Flight flight = adminService.displayFlight(flightId);
-		System.out.println(flight.toString());
+		System.out.println(flight);
 		return flight;
 	}
 	
