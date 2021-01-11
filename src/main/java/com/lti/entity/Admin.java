@@ -24,8 +24,8 @@ public class Admin {
 	@Column(name = "admin_password")
 	private String adminPassword;
 
-	@OneToMany(mappedBy = "admin")
-	private Set<Flight> flightList;
+	//@OneToMany(mappedBy = "admin")
+	//private Set<Flight> flightList;
 
 	public Admin() {
 
@@ -58,7 +58,7 @@ public class Admin {
 	@Override
 	public String toString() {
 		return "Admin [adminId=" + adminId + ", adminUsername=" + adminUsername + ", adminPassword=" + adminPassword
-				+ ", flightList=" + flightList + "]";
+				+ "]";
 	}
 
 }

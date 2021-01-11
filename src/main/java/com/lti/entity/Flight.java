@@ -50,9 +50,9 @@ public class Flight {
 	@Column(name = "business_seat")
 	private int businessSeats;
 
-	@ManyToOne
-	@JoinColumn(name = "admin_id")
-	private Admin admin;
+	//@ManyToOne
+	//@JoinColumn(name = "admin_id")
+	//private Admin admin;
 
 	public Flight() {
 	}
@@ -153,20 +153,17 @@ public class Flight {
 		this.businessSeats = businessSeats;
 	}
 
-	public Admin getAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(Admin admin) {
-		this.admin = admin;
-	}
+	/*
+	 * public Admin getAdmin() { return admin; }
+	 * 
+	 * public void setAdmin(Admin admin) { this.admin = admin; }
+	 */
 
 	@Override
 	public String toString() {
 		return "Flight [flightId=" + flightId + ", source=" + source + ", destination=" + destination + ", departure="
 				+ departure + ", arrival=" + arrival + ", duration=" + duration + ", journeyDate=" + journeyDate
 				+ ", economyClassCost=" + economyClassCost + ", businessClassCost=" + businessClassCost + ", noOfSeats="
-				+ noOfSeats + ", economySeats=" + economySeats + ", businessSeats=" + businessSeats + ", admin=" + admin
-				+ "]";
+				+ noOfSeats + ", economySeats=" + economySeats + ", businessSeats=" + businessSeats + "]";
 	}
 }
