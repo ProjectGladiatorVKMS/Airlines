@@ -16,11 +16,11 @@ public class AdminServiceImpl implements AdminService {
 	GenericDao dao;
 
 	@Autowired
-	MiscFunction function;
+	MiscFunction miscFunction;
 
 	@Override
 	public void addFlight(Flight flight) {
-		flight.setDuration(function.calcDuration(flight.getDeparture(), flight.getArrival()));
+		flight.setDuration(miscFunction.calcDuration(flight.getDeparture(), flight.getArrival()));
 		dao.save(flight);
 	}
 

@@ -5,14 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lti.dto.FlightDataTransfer;
 import com.lti.entity.Admin;
 import com.lti.entity.Flight;
+import com.lti.function.MiscFunction;
 import com.lti.service.AdminService;
 
 @RestController
@@ -20,10 +21,27 @@ public class AirlineController {
 
 	@Autowired
 	private AdminService adminService;
-
+	
 	//Incomplete
 	@PostMapping("/addFlight")
-	public String addFlight(@RequestBody Flight flight) {
+	public String addFlight(@RequestBody FlightDataTransfer flightDT) {
+		
+		Flight flight=new Flight();
+		Admin admin=new Admin();
+		admin.setAdminId(flightDT.getAdminId());
+		
+		flight.setSource(flightDT.getSource());
+		flight.setDestination(flightDT.getDestination());
+		flight.setJourneyDate(flightDT.getJourneyDate());
+		flight.setDeparture(flightDT.getDepartureTime());
+		flight.setArrival(flightDT.getArrivalTime());
+		flight.setEconomyClassCost(flightDT.getEconomyClassCost());
+		flight.setBusinessClassCost(flightDT.getBusinessClassCost());
+		flight.setNoOfSeats(flightDT.getNoOfSeats());
+		flight.setEconomySeats(flightDT.getEconomySeats());
+		flight.setBusinessSeats(flight.getBusinessSeats());
+		flight.setAdmin(admin);
+		
 		adminService.addFlight(flight);
 
 		return null;

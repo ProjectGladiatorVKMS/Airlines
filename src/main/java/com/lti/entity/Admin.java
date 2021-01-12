@@ -1,9 +1,11 @@
 package com.lti.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -24,12 +26,23 @@ public class Admin {
 	@Column(name = "admin_password")
 	private String adminPassword;
 
-	//@OneToMany(mappedBy = "admin")
-	//private Set<Flight> flightList;
+	@OneToMany(mappedBy = "admin")
+	private List<Flight> flightList;
 
 	public Admin() {
 
 	}
+	
+
+	public List<Flight> getFlightList() {
+		return flightList;
+	}
+
+
+	public void setFlightList(List<Flight> flightList) {
+		this.flightList = flightList;
+	}
+
 
 	public int getAdminId() {
 		return adminId;

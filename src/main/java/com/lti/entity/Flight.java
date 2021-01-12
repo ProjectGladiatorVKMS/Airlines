@@ -6,7 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "flight_detail")
@@ -50,12 +54,25 @@ public class Flight {
 	@Column(name = "business_seat")
 	private int businessSeats;
 
-	//@ManyToOne
-	//@JoinColumn(name = "admin_id")
-	//private Admin admin;
+	@ManyToOne
+	@JoinColumn(name = "admin_id")
+	@JsonIgnore
+	private Admin admin;
+	
 
 	public Flight() {
 	}
+
+	
+	public Admin getAdmin() {
+		return admin;
+	}
+
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+
 
 	public int getFlightId() {
 		return flightId;
