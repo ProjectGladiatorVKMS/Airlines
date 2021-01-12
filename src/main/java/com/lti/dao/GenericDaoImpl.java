@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public class GenericDaoImpl implements GenericDao {
 
 	@PersistenceContext
-	private EntityManager entityManager;
+	protected EntityManager entityManager;
 	
 	@Override
 	public Object save(Object obj) {

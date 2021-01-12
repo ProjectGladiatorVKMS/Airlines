@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lti.dto.AdminLoginDataTransfer;
 import com.lti.dto.FlightDataTransfer;
+import com.lti.dto.UserLoginDataTransfer;
 import com.lti.entity.Admin;
 import com.lti.entity.Flight;
-import com.lti.function.MiscFunction;
+import com.lti.entity.User;
 import com.lti.service.AdminService;
+import com.lti.service.AirlineService;
+import com.lti.service.LoginService;
 
 @RestController
 public class AirlineController {
@@ -22,6 +26,29 @@ public class AirlineController {
 	@Autowired
 	private AdminService adminService;
 	
+	@Autowired
+	private AirlineService airlineService;
+	
+	@Autowired
+	private LoginService loginService;
+	
+	/*----------------------------------------------------------Login Validation------------------------------------------------------------------*/
+	@PostMapping("/validateUser")
+	public String validateUser(@RequestBody UserLoginDataTransfer userLoginDT) {
+		loginService.validateUser(userLoginDT.getEmailId(), userLoginDT.getPassword());
+		return null;
+	}
+	
+	@PostMapping("/validateAdmin")
+	public String validateAdmin(@RequestBody AdminLoginDataTransfer adminLoginDT) {
+		loginService.validateAdmin(adminLoginDT.getUsername(), adminLoginDT.getPassword());
+		return null;
+	}
+	
+	
+	
+	
+	/*----------------------------------------------------------Admin Controller------------------------------------------------------------------*/
 	@PostMapping("/addFlight")
 	public String addFlight(@RequestBody FlightDataTransfer flightDT) {
 		System.out.println("Airline controller");
@@ -66,10 +93,17 @@ public class AirlineController {
 		return flight;
 	}
 	
-	@GetMapping("/hello")
-	public String hello(@RequestParam("name") String name) {
-		return "Hello "+name;
-	}
+	/*
+	 * @GetMapping("/hello") public String hello(@RequestParam("name") String name)
+	 * { return "Hello "+name; }
+	 */
 	
+	/*-------------------------------------------------------------- User Controller------------------------------------------------------------*/
+	
+	@PostMapping("/registerUser")
+	public int registerUser(@RequestBody User user) {
+		int user_id = airlineService.registerUser(user);
+		return user_id;
+	}
 	
 }

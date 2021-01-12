@@ -17,7 +17,6 @@ public class FlightDataTransfer {
 	private int adminId;
 
 	public FlightDataTransfer() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getSource() {
