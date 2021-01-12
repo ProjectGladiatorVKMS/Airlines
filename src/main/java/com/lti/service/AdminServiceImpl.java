@@ -19,9 +19,13 @@ public class AdminServiceImpl implements AdminService {
 	MiscFunction miscFunction;
 
 	@Override
-	public void addFlight(Flight flight) {
-		flight.setDuration(miscFunction.calcDuration(flight.getDeparture(), flight.getArrival()));
-		dao.save(flight);
+	public int addFlight(Flight flight) {
+		//flight.setDuration(miscFunction.calcDuration(flight.getDeparture(), flight.getArrival()));
+		flight.setDuration("2 Hrs");
+		System.out.println("asi");
+		Flight updatedFlight = (Flight) dao.save(flight);
+		System.out.println(updatedFlight);
+		return updatedFlight.getFlightId();
 	}
 
 	@Override

@@ -22,10 +22,9 @@ public class AirlineController {
 	@Autowired
 	private AdminService adminService;
 	
-	//Incomplete
 	@PostMapping("/addFlight")
 	public String addFlight(@RequestBody FlightDataTransfer flightDT) {
-		
+		System.out.println("Airline controller");
 		Flight flight=new Flight();
 		Admin admin=new Admin();
 		admin.setAdminId(flightDT.getAdminId());
@@ -41,7 +40,7 @@ public class AirlineController {
 		flight.setEconomySeats(flightDT.getEconomySeats());
 		flight.setBusinessSeats(flight.getBusinessSeats());
 		flight.setAdmin(admin);
-		
+		System.out.println("Airline controller");
 		adminService.addFlight(flight);
 
 		return null;

@@ -1,10 +1,12 @@
 package com.lti.dto;
 
+import java.util.Date;
+
 public class FlightDataTransfer {
 
 	private String source;
 	private String destination;
-	private String journeyDate;
+	private Date journeyDate;
 	private String departureTime;
 	private String arrivalTime;
 	private double economyClassCost;
@@ -34,11 +36,11 @@ public class FlightDataTransfer {
 		this.destination = destination;
 	}
 
-	public String getJourneyDate() {
+	public Date getJourneyDate() {
 		return journeyDate;
 	}
 
-	public void setJourneyDate(String journeyDate) {
+	public void setJourneyDate(Date journeyDate) {
 		this.journeyDate = journeyDate;
 	}
 

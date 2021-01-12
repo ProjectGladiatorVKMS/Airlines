@@ -1,15 +1,18 @@
 package com.lti.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -37,7 +40,9 @@ public class Flight {
 	private String duration;
 
 	@Column(name = "journey_date")
-	private String journeyDate;
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private Date journeyDate;
 
 	@Column(name = "economy_class_cost")
 	private double economyClassCost;
@@ -122,11 +127,11 @@ public class Flight {
 		this.duration = duration;
 	}
 
-	public String getJourneyDate() {
+	public Date getJourneyDate() {
 		return journeyDate;
 	}
 
-	public void setJourneyDate(String journeyDate) {
+	public void setJourneyDate(Date journeyDate) {
 		this.journeyDate = journeyDate;
 	}
 
