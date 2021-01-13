@@ -22,9 +22,9 @@ public class AdminServiceImpl implements AdminService {
 	public int addFlight(Flight flight) {
 		//flight.setDuration(miscFunction.calcDuration(flight.getDeparture(), flight.getArrival()));
 		flight.setDuration("2 Hrs");
-		System.out.println("asi");
+		//System.out.println("asi");
 		Flight updatedFlight = (Flight) dao.save(flight);
-		System.out.println(updatedFlight);
+		//System.out.println(updatedFlight);
 		return updatedFlight.getFlightId();
 	}
 

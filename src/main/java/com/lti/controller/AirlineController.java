@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lti.dto.AdminLoginDataTransfer;
 import com.lti.dto.FlightDataTransfer;
 import com.lti.dto.LoginStatusDT;
+import com.lti.dto.SearchFlightsDT;
 import com.lti.dto.UserLoginDataTransfer;
 import com.lti.entity.Admin;
 import com.lti.entity.Flight;
@@ -65,7 +66,7 @@ public class AirlineController {
 		flight.setBusinessClassCost(flightDT.getBusinessClassCost());
 		flight.setNoOfSeats(flightDT.getNoOfSeats());
 		flight.setEconomySeats(flightDT.getEconomySeats());
-		flight.setBusinessSeats(flight.getBusinessSeats());
+		flight.setBusinessSeats(flightDT.getBusinessSeats());
 		flight.setAdmin(admin);
 		System.out.println("Airline controller");
 		adminService.addFlight(flight);
@@ -104,6 +105,11 @@ public class AirlineController {
 	public int registerUser(@RequestBody User user) {
 		int user_id = airlineService.registerUser(user);
 		return user_id;
+	}
+	
+	@GetMapping("/searchFlights")
+	public List<Flight> searchFlights(@RequestBody SearchFlightsDT searchFlightsDT){
+		return airlineService.searchFlights(searchFlightsDT);
 	}
 
 }
