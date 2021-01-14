@@ -5,17 +5,24 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lti.dto.SearchFlightsDT;
+import com.lti.entity.Booking;
 import com.lti.entity.Flight;
+import com.lti.entity.Passenger;
 
 @Repository
 public class AirlineOperationDaoImpl implements AirlineOperationDao {
 
 	@PersistenceContext
 	protected EntityManager entityManager; 
+	
+	@Autowired
+	protected GenericDao dao;
 	
 	@Override
 	public List<Flight> searchFlightOperation(SearchFlightsDT searchFlightsDT) {
@@ -40,6 +47,33 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 			return query.getResultList();
 		}
 		
+	}
+
+	@Override
+	public void addPassenger(Passenger passenger) {
+		Passenger updatedPassenger = (Passenger) dao.save(passenger);
+	}
+
+	@Override
+	public List<Passenger> fetchPassenger(int bookingId) {
+
+		String fetchedQuery = "select p from Passenger p where p.booking.bookingId=:qbookingId";
+		Query query = entityManager.createQuery(fetchedQuery);
+		query.setParameter("qbookingId", bookingId);
+		List<Passenger> passengers = query.getResultList();
+		return passengers;
+	}
+
+	@Override
+	public Flight fetchFlight(Booking booking) {
+
+		Flight bookedFlight = booking.getFlight();
+		int bookedFlightId = bookedFlight.getFlightId();
+		String fetchedQuery = "select f from Flight f where f.flightId=:qflightId";
+		Query query = entityManager.createQuery(fetchedQuery);
+		query.setParameter("qflightId", bookedFlightId);
+		Flight fetchedFlight = (Flight) query.getSingleResult();
+		return fetchedFlight;
 	}
 
 }

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lti.dto.AdminLoginDataTransfer;
+import com.lti.dto.BookingDT;
 import com.lti.dto.FlightDataTransfer;
 import com.lti.dto.LoginStatusDT;
 import com.lti.dto.SearchFlightsDT;
+import com.lti.dto.StatusDT;
 import com.lti.dto.UserLoginDataTransfer;
 import com.lti.entity.Admin;
 import com.lti.entity.Flight;
@@ -111,5 +113,21 @@ public class AirlineController {
 	public List<Flight> searchFlights(@RequestBody SearchFlightsDT searchFlightsDT){
 		return airlineService.searchFlights(searchFlightsDT);
 	}
+	
+	@PostMapping("/addBooking")
+	public StatusDT addBooking(@RequestBody BookingDT bookingDT) {
+		int bookingId = airlineService.addBooking(bookingDT);
+		StatusDT status = new StatusDT();
+		status.setGeneratedId(bookingId);
+		status.setMessage("Ticket Booking in Progress");
+		return status;
+	}
+	
+	@PostMapping("/updateBooking")
+	public void updateBooking(@RequestParam("bookingId") int bookingId) {
+		airlineService.updateBooking(bookingId);
+		System.out.println(bookingId);
+	}
+	
 
 }

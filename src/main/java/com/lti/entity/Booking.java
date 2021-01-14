@@ -1,5 +1,6 @@
 package com.lti.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -11,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="booking_detail")
 public class Booking {
 
 	@Id
@@ -43,6 +46,12 @@ public class Booking {
 
 	@Column(name = "ticket_mailing_id")
 	private String ticketMailingId;
+	
+	@Column(name="booking_date")
+	private LocalDate bookingDate;
+	
+	@Column(name="travel_class")
+	private String travelClass;
 
 	@OneToOne
 	@JoinColumn(name = "user_id_fk")
@@ -163,5 +172,30 @@ public class Booking {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+	
+	public LocalDate getBookingDate() {
+		return bookingDate;
+	}
+
+	public void setBookingDate(LocalDate bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+
+	public String getTravelClass() {
+		return travelClass;
+	}
+
+	public void setTravelClass(String travelClass) {
+		this.travelClass = travelClass;
+	}
+
+	@Override
+	public String toString() {
+		return "Booking [bookingId=" + bookingId + ", source=" + source + ", destination=" + destination
+				+ ", departure=" + departure + ", arrival=" + arrival + ", journeyDate=" + journeyDate
+				+ ", noOfPassengers=" + noOfPassengers + ", cost=" + cost + ", ticketMailingId=" + ticketMailingId
+				+ ", bookingDate=" + bookingDate + ", travelClass=" + travelClass + ", user=" + user + ", flight="
+				+ flight + ", passengerList=" + passengerList + ", payment=" + payment + "]";
 	}
 }

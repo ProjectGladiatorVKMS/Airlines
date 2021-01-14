@@ -4,9 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="passenger_detail")
 public class Passenger {
 
 	@Id
@@ -30,7 +33,7 @@ public class Passenger {
 	private String bookingStatus;
 
 	@ManyToOne
-	@Column(name = "booking_id_fk")
+	@JoinColumn(name = "booking_id_fk")
 	private Booking booking;
 
 	public Passenger() {
