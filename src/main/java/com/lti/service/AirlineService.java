@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.lti.dto.BookingDT;
 import com.lti.dto.SearchFlightsDT;
+import com.lti.dto.TicketDT;
 import com.lti.entity.Flight;
 import com.lti.entity.User;
 
@@ -13,4 +14,5 @@ public interface AirlineService {
 	public List<Flight> searchFlights(SearchFlightsDT searchFlightsDT);
 	public int addBooking(BookingDT bookingDT);
 	public void updateBooking(int bookinId);
+	public TicketDT fetchTicket(int bookingId);
 }

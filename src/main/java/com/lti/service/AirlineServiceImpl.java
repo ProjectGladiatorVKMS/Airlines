@@ -13,6 +13,7 @@ import com.lti.dao.AirlineOperationDao;
 import com.lti.dao.GenericDao;
 import com.lti.dto.BookingDT;
 import com.lti.dto.SearchFlightsDT;
+import com.lti.dto.TicketDT;
 import com.lti.entity.Booking;
 import com.lti.entity.Flight;
 import com.lti.entity.Passenger;
@@ -57,7 +58,7 @@ public class AirlineServiceImpl implements AirlineService {
 
 		user = dao.fetchById(User.class, bookingDT.getUserId());
 		flight = dao.fetchById(Flight.class, bookingDT.getFlightId());
-		
+
 		System.out.println(flight);
 		System.out.println(user);
 
@@ -102,12 +103,18 @@ public class AirlineServiceImpl implements AirlineService {
 			flight.setBusinessSeats(flight.getBusinessSeats() - confirmedSeats);
 		}
 		flight = (Flight) dao.save(flight);
-		
+
 		Payment payment = new Payment();
 		payment.setAmountPaid(booking.getCost());
 		payment.setPaymentMode("Net Banking / UPI");
 		payment.setBooking(booking);
 		payment = (Payment) dao.save(payment);
+	}
+
+	@Override
+	public TicketDT fetchTicket(int bookingId) {
+		TicketDT ticket = airlineDao.fetchTicket(bookingId);
+		return ticket;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.lti.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.lti.dto.SearchFlightsDT;
+import com.lti.dto.TicketDT;
 import com.lti.entity.Booking;
 import com.lti.entity.Flight;
 import com.lti.entity.Passenger;
@@ -19,15 +21,15 @@ import com.lti.entity.Passenger;
 public class AirlineOperationDaoImpl implements AirlineOperationDao {
 
 	@PersistenceContext
-	protected EntityManager entityManager; 
-	
+	protected EntityManager entityManager;
+
 	@Autowired
 	protected GenericDao dao;
-	
+
 	@Override
 	public List<Flight> searchFlightOperation(SearchFlightsDT searchFlightsDT) {
 
-		if(searchFlightsDT.getTravelClass().equalsIgnoreCase("economy")) {
+		if (searchFlightsDT.getTravelClass().equalsIgnoreCase("economy")) {
 			String fetchedQuery = "select f from Flight f where f.source=:qsource and f.destination=:qdestination and f.journeyDate=:qdate and f.economySeats >= :qtravellers";
 			Query query = entityManager.createQuery(fetchedQuery);
 			query.setParameter("qsource", searchFlightsDT.getSource());
@@ -35,9 +37,8 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 			query.setParameter("qdate", searchFlightsDT.getTravelDate());
 			query.setParameter("qtravellers", searchFlightsDT.getNoOfPassengers());
 			return query.getResultList();
-			
-		}
-		else {
+
+		} else {
 			String fetchedQuery = "select f from Flight f where f.source=:qsource and f.destination=:qdestination and f.journeyDate=:qdate and f.businessSeats >= :qtravellers";
 			Query query = entityManager.createQuery(fetchedQuery);
 			query.setParameter("qsource", searchFlightsDT.getSource());
@@ -46,7 +47,7 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 			query.setParameter("qtravellers", searchFlightsDT.getNoOfPassengers());
 			return query.getResultList();
 		}
-		
+
 	}
 
 	@Override
@@ -74,6 +75,44 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 		query.setParameter("qflightId", bookedFlightId);
 		Flight fetchedFlight = (Flight) query.getSingleResult();
 		return fetchedFlight;
+	}
+
+	@Override
+	public TicketDT fetchTicket(int bookingId) {
+
+		// fetching Flight
+		Booking booking = new Booking();
+		booking = dao.fetchById(Booking.class, bookingId);
+		Flight bookedFlight = booking.getFlight();
+		int bookedFlightId = bookedFlight.getFlightId();
+		String fetchedQuery1 = "select f from Flight f where f.flightId=:qflightId";
+		Query query1 = entityManager.createQuery(fetchedQuery1);
+		query1.setParameter("qflightId", bookedFlightId);
+		Flight fetchedFlight = (Flight) query1.getSingleResult();
+
+		// fetching passenger
+		String fetchedQuery2 = "select p from Passenger p where p.booking.bookingId=:qbookingId";
+		Query query2 = entityManager.createQuery(fetchedQuery2);
+		query2.setParameter("qbookingId", bookingId);
+		List<Passenger> passengerList = query2.getResultList();
+
+		// generating Ticket
+		TicketDT ticketDT = new TicketDT();
+		ticketDT.setBookingId(bookingId);
+		ticketDT.setFlightId(fetchedFlight.getFlightId());
+		ticketDT.setSource(fetchedFlight.getSource());
+		ticketDT.setDestination(fetchedFlight.getDestination());
+		ticketDT.setJourneyDate(booking.getJourneyDate().toString());
+		ticketDT.setArrivalTime(fetchedFlight.getArrival());
+		ticketDT.setDepartureTime(fetchedFlight.getDeparture());
+		ticketDT.setTravelClass(booking.getTravelClass());
+
+		List<String> passengerNames = new ArrayList<String>();
+		for (Passenger p : passengerList) {
+			passengerNames.add(p.getfName() + " " + p.getlName());
+		}
+		ticketDT.setPassengerName(passengerNames);
+		return ticketDT;
 	}
 
 }
