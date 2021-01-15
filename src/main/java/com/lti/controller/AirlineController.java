@@ -36,21 +36,21 @@ public class AirlineController {
 	@Autowired
 	private AirlineService airlineService;
 
-	@Autowired
-	private LoginService loginService;
+//	@Autowired
+//	private LoginService loginService;
 
 	/*----------------------------------------------------------Login Validation------------------------------------------------------------------*/
-	@PostMapping("/validateUser")
-	public LoginStatusDT validateUser(@RequestBody UserLoginDataTransfer userLoginDT) {
-		LoginStatusDT loginStatus = loginService.validateUser(userLoginDT.getEmailId(), userLoginDT.getPassword());
-		return loginStatus;
-	}
-
-	@PostMapping("/validateAdmin")
-	public LoginStatusDT validateAdmin(@RequestBody AdminLoginDataTransfer adminLoginDT) {
-		LoginStatusDT loginStatus = loginService.validateAdmin(adminLoginDT.getUsername(), adminLoginDT.getPassword());
-		return loginStatus;
-	}
+//	@PostMapping("/validateUser")
+//	public LoginStatusDT validateUser(@RequestBody UserLoginDataTransfer userLoginDT) {
+//		LoginStatusDT loginStatus = loginService.validateUser(userLoginDT.getEmailId(), userLoginDT.getPassword());
+//		return loginStatus;
+//	}
+//
+//	@PostMapping("/validateAdmin")
+//	public LoginStatusDT validateAdmin(@RequestBody AdminLoginDataTransfer adminLoginDT) {
+//		LoginStatusDT loginStatus = loginService.validateAdmin(adminLoginDT.getUsername(), adminLoginDT.getPassword());
+//		return loginStatus;
+//	}
 
 	/*----------------------------------------------------------Admin Controller------------------------------------------------------------------*/
 	@PostMapping("/addFlight")
