@@ -3,6 +3,7 @@ package com.lti.entity;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class Admin {
 	@Column(name = "admin_password")
 	private String adminPassword;
 
-	@OneToMany(mappedBy = "admin")
+	@OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
 	private List<Flight> flightList;
 
 	public Admin() {

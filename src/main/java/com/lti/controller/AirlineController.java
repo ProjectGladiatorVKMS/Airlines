@@ -105,12 +105,15 @@ public class AirlineController {
 	/*-------------------------------------------------------------- User Controller------------------------------------------------------------*/
 
 	@PostMapping("/registerUser")
-	public int registerUser(@RequestBody User user) {
+	public StatusDT registerUser(@RequestBody User user) {
 		int user_id = airlineService.registerUser(user);
-		return user_id;
+		StatusDT status = new StatusDT();
+		status.setGeneratedId(user_id);
+		status.setMessage("User Registered Successfully");
+		return status;
 	}
 
-	@GetMapping("/searchFlights")
+	@PostMapping("/searchFlights")
 	public List<Flight> searchFlights(@RequestBody SearchFlightsDT searchFlightsDT) {
 		return airlineService.searchFlights(searchFlightsDT);
 	}
@@ -136,5 +139,7 @@ public class AirlineController {
 		TicketDT ticket = airlineService.fetchTicket(bookingId);
 		return ticket;
 	}
+	
+	
 
 }
