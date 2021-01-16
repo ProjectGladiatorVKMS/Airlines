@@ -20,8 +20,8 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public int addFlight(Flight flight) {
-		//flight.setDuration(miscFunction.calcDuration(flight.getDeparture(), flight.getArrival()));
-		flight.setDuration("2 Hrs");
+		flight.setDuration(miscFunction.calcDuration(flight.getDeparture(), flight.getArrival()));
+		//flight.setDuration("2 Hrs");
 		//System.out.println("asi");
 		Flight updatedFlight = (Flight) dao.save(flight);
 		//System.out.println(updatedFlight);

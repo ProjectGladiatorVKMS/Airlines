@@ -47,7 +47,7 @@ public class UserController {
 		status.setMessage("Ticket Booking in Progress");
 		return status;
 	}
-	@PostMapping("/updateBooking")
+	@GetMapping("/updateBooking")
 	public void updateBooking(@RequestParam("bookingId") int bookingId) {
 		airlineService.updateBooking(bookingId);
 		System.out.println(bookingId);

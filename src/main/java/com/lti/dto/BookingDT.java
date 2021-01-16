@@ -7,7 +7,6 @@ import com.lti.entity.Passenger;
 
 public class BookingDT {
 
-	private Date journeyDate;
 	private int noOfPassenger;
 	private double cost;
 	private int userId;
@@ -17,13 +16,6 @@ public class BookingDT {
 	
 	private List<Passenger> passengerList;
 
-	public Date getJourneyDate() {
-		return journeyDate;
-	}
-
-	public void setJourneyDate(Date journeyDate) {
-		this.journeyDate = journeyDate;
-	}
 
 	public int getNoOfPassenger() {
 		return noOfPassenger;

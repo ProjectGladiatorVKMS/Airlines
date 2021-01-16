@@ -49,7 +49,7 @@ public class AirlineServiceImpl implements AirlineService {
 		Booking booking = new Booking();
 		Passenger passenger = new Passenger();
 
-		booking.setJourneyDate(bookingDT.getJourneyDate());
+		
 		booking.setNoOfPassengers(bookingDT.getNoOfPassenger());
 		booking.setCost(bookingDT.getCost());
 		booking.setTicketMailingId(bookingDT.getEmailId());
@@ -64,6 +64,7 @@ public class AirlineServiceImpl implements AirlineService {
 
 		booking.setUser(user);
 		booking.setFlight(flight);
+		booking.setJourneyDate(flight.getJourneyDate());
 
 		booking.setSource(flight.getSource());
 		booking.setDestination(flight.getDestination());
