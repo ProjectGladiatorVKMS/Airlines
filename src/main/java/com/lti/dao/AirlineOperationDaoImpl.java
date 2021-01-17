@@ -166,10 +166,10 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 				String l = String.valueOf(p.getlName());
 				String g = String.valueOf(p.getGender());
 				String a = String.valueOf(p.getAge());
-				Paragraph para11 = new Paragraph(f);
-				Paragraph para21 = new Paragraph(l);
-				Paragraph para31 = new Paragraph(g);
-				Paragraph para41 = new Paragraph(a);
+				Paragraph para11 = new Paragraph("First Name: "+f);
+				Paragraph para21 = new Paragraph("Last Name: "+l);
+				Paragraph para31 = new Paragraph("Gender: "+g);
+				Paragraph para41 = new Paragraph("Age: "+a);
 				document.add(para11);
 				document.add(para21);
 				document.add(para31);
