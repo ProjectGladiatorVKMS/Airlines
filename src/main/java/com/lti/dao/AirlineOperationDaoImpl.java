@@ -1,16 +1,26 @@
 package com.lti.dao;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Repository;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.lti.dto.SearchFlightsDT;
 import com.lti.dto.TicketDT;
 import com.lti.entity.Booking;
@@ -23,6 +33,9 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 
 	@PersistenceContext
 	protected EntityManager entityManager;
+
+	@Autowired
+	protected JavaMailSender mailSender;
 
 	@Autowired
 	protected GenericDao dao;
@@ -81,39 +94,113 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 	@Override
 	public TicketDT fetchTicket(int bookingId) {
 
-		// fetching Flight
-		Booking booking = new Booking();
-		booking = dao.fetchById(Booking.class, bookingId);
-		Flight bookedFlight = booking.getFlight();
-		int bookedFlightId = bookedFlight.getFlightId();
-		String fetchedQuery1 = "select f from Flight f where f.flightId=:qflightId";
-		Query query1 = entityManager.createQuery(fetchedQuery1);
-		query1.setParameter("qflightId", bookedFlightId);
-		Flight fetchedFlight = (Flight) query1.getSingleResult();
-
-		// fetching passenger
-		String fetchedQuery2 = "select p from Passenger p where p.booking.bookingId=:qbookingId";
-		Query query2 = entityManager.createQuery(fetchedQuery2);
-		query2.setParameter("qbookingId", bookingId);
-		List<Passenger> passengerList = query2.getResultList();
-
-		// generating Ticket
 		TicketDT ticketDT = new TicketDT();
-		ticketDT.setBookingId(bookingId);
-		ticketDT.setFlightId(fetchedFlight.getFlightId());
-		ticketDT.setSource(fetchedFlight.getSource());
-		ticketDT.setDestination(fetchedFlight.getDestination());
-		ticketDT.setJourneyDate(booking.getJourneyDate());
-		ticketDT.setArrivalTime(fetchedFlight.getArrival());
-		ticketDT.setDepartureTime(fetchedFlight.getDeparture());
-		ticketDT.setTravelClass(booking.getTravelClass());
+		try {
+			// fetching Flight
+			Booking booking = new Booking();
+			booking = dao.fetchById(Booking.class, bookingId);
+			Flight bookedFlight = booking.getFlight();
+			int bookedFlightId = bookedFlight.getFlightId();
+			String fetchedQuery1 = "select f from Flight f where f.flightId=:qflightId";
+			Query query1 = entityManager.createQuery(fetchedQuery1);
+			query1.setParameter("qflightId", bookedFlightId);
+			Flight fetchedFlight = (Flight) query1.getSingleResult();
 
-		List<Passenger> passengerData = new ArrayList<Passenger>();
-		for (Passenger p : passengerList) {
-			passengerData.add(p);
+			// fetching passenger
+			String fetchedQuery2 = "select p from Passenger p where p.booking.bookingId=:qbookingId";
+			Query query2 = entityManager.createQuery(fetchedQuery2);
+			query2.setParameter("qbookingId", bookingId);
+			List<Passenger> passengerList = query2.getResultList();
+
+			// generating Ticket
+			
+			ticketDT.setBookingId(bookingId);
+			ticketDT.setFlightId(fetchedFlight.getFlightId());
+			ticketDT.setSource(fetchedFlight.getSource());
+			ticketDT.setDestination(fetchedFlight.getDestination());
+			ticketDT.setJourneyDate(booking.getJourneyDate());
+			ticketDT.setArrivalTime(fetchedFlight.getArrival());
+			ticketDT.setDepartureTime(fetchedFlight.getDeparture());
+			ticketDT.setTravelClass(booking.getTravelClass());
+
+			List<Passenger> passengerData = new ArrayList<Passenger>();
+			for (Passenger p : passengerList) {
+				passengerData.add(p);
+			}
+			ticketDT.setPassengerList(passengerData);
+
+			// Generating pdf
+			Document document = new Document();
+			FileOutputStream out = new FileOutputStream("c:/SendingMail/e-ticket.pdf");
+			PdfWriter writer = PdfWriter.getInstance(document, out);
+			document.open();
+
+			String pnr = "Booking Id: "+String.valueOf(ticketDT.getBookingId());
+			String fId = "Flight Id: "+String.valueOf(ticketDT.getFlightId());
+			String date = String.valueOf(ticketDT.getJourneyDate());
+			
+			
+			Paragraph para1 = new Paragraph(pnr);
+			Paragraph para2 = new Paragraph(fId);
+			Paragraph para3 = new Paragraph("Source: "+ticketDT.getSource());
+			Paragraph para4 = new Paragraph("Destination: "+ticketDT.getDestination());
+			Paragraph para5 = new Paragraph("DepartureTime: "+ticketDT.getDepartureTime());
+			Paragraph para6 = new Paragraph("ArrivalTime: "+ticketDT.getArrivalTime());
+			Paragraph para7 = new Paragraph("Journey Date: "+date);
+			Paragraph para8 = new Paragraph("Travel Class: "+ticketDT.getTravelClass());
+			Paragraph para9 = new Paragraph("Passenger List: ");
+			
+			document.add(para1);
+			document.add(para2);
+			document.add(para3);
+			document.add(para4);
+			document.add(para5);
+			document.add(para6);
+			document.add(para7);
+			document.add(para8);
+			document.add(para9);
+			
+			
+			for (Passenger p : passengerList) {
+				String f = String.valueOf(p.getfName());
+				String l = String.valueOf(p.getlName());
+				String g = String.valueOf(p.getGender());
+				String a = String.valueOf(p.getAge());
+				Paragraph para11 = new Paragraph(f);
+				Paragraph para21 = new Paragraph(l);
+				Paragraph para31 = new Paragraph(g);
+				Paragraph para41 = new Paragraph(a);
+				document.add(para11);
+				document.add(para21);
+				document.add(para31);
+				document.add(para41);
+			}
+			
+			
+			
+			document.close();
+			writer.close();
+
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			helper.setFrom("sonicairlines.autogenerated@gmail.com");
+			helper.setTo(booking.getTicketMailingId());
+			helper.setSubject("Sonic Airlines E-Ticket");
+			helper.setText("Attached file is your e-ticket");
+
+			FileSystemResource file = new FileSystemResource(new File("c:/SendingMail/e-ticket.pdf"));
+
+			helper.addAttachment("e-ticket.pdf", file);
+
+			mailSender.send(message);
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		ticketDT.setPassengerList(passengerData);
 		return ticketDT;
+
 	}
 
 	@Override

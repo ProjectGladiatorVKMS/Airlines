@@ -32,9 +32,12 @@ public class LoginDaoImpl implements LoginDao {
 		if (fetchedResult.isEmpty()) {
 			loginStatus.setResult(false);
 			loginStatus.setFetchedUserId(0);
+			loginStatus.setFetchedName(null);
 		} else {
 			loginStatus.setResult(true);
 			loginStatus.setFetchedUserId(fetchedResult.get(0).getUserId());
+			String name = fetchedResult.get(0).getfName() +" "+ fetchedResult.get(0).getlName();
+			loginStatus.setFetchedName(name);
 		}
 
 		return loginStatus;

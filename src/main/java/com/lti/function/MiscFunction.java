@@ -18,6 +18,5 @@ public class MiscFunction {
 		int minutes=(int)(var*60);
 		String duration=hours+"hrs "+minutes+"mins";
 		return duration;
-		
 	}
 }
