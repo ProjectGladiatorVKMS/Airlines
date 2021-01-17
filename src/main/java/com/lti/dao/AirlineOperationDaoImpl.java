@@ -1,12 +1,12 @@
 package com.lti.dao;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.lti.dto.SearchFlightsDT;
 import com.lti.dto.TicketDT;
 import com.lti.entity.Booking;
+import com.lti.entity.CancelBooking;
 import com.lti.entity.Flight;
 import com.lti.entity.Passenger;
 
@@ -102,17 +103,85 @@ public class AirlineOperationDaoImpl implements AirlineOperationDao {
 		ticketDT.setFlightId(fetchedFlight.getFlightId());
 		ticketDT.setSource(fetchedFlight.getSource());
 		ticketDT.setDestination(fetchedFlight.getDestination());
-		ticketDT.setJourneyDate(booking.getJourneyDate().toString());
+		ticketDT.setJourneyDate(booking.getJourneyDate());
 		ticketDT.setArrivalTime(fetchedFlight.getArrival());
 		ticketDT.setDepartureTime(fetchedFlight.getDeparture());
 		ticketDT.setTravelClass(booking.getTravelClass());
 
-		List<String> passengerNames = new ArrayList<String>();
+		List<Passenger> passengerData = new ArrayList<Passenger>();
 		for (Passenger p : passengerList) {
-			passengerNames.add(p.getfName() + " " + p.getlName());
+			passengerData.add(p);
 		}
-		ticketDT.setPassengerName(passengerNames);
+		ticketDT.setPassengerList(passengerData);
 		return ticketDT;
 	}
 
+	@Override
+	public double cancelTicket(int bookingId) {
+
+		// fetching booking and flight
+		Booking booking = new Booking();
+		booking = dao.fetchById(Booking.class, bookingId);
+		Flight bookedFlight = booking.getFlight();
+		int bookedFlightId = bookedFlight.getFlightId();
+		String fetchedQuery1 = "select f from Flight f where f.flightId=:qflightId";
+		Query query1 = entityManager.createQuery(fetchedQuery1);
+		query1.setParameter("qflightId", bookedFlightId);
+		Flight fetchedFlight = (Flight) query1.getSingleResult();
+
+		// fetching passenger
+		String fetchedQuery2 = "select p from Passenger p where p.booking.bookingId=:qbookingId";
+		Query query2 = entityManager.createQuery(fetchedQuery2);
+		query2.setParameter("qbookingId", bookingId);
+		List<Passenger> passengerList = query2.getResultList();
+
+		for (Passenger p : passengerList) {
+			p.setBookingStatus("Cancelled");
+		}
+		for (Passenger p : passengerList) {
+			dao.save(p);
+		}
+
+		CancelBooking cancelBooking = new CancelBooking();
+		cancelBooking.setArrival(booking.getArrival());
+		cancelBooking.setBookingDate(booking.getBookingDate());
+		cancelBooking.setBookingId(booking.getBookingId());
+		cancelBooking.setSource(booking.getSource());
+		cancelBooking.setDestination(booking.getDestination());
+		cancelBooking.setDeparture(booking.getDeparture());
+		cancelBooking.setUserId(booking.getUser().getUserId());
+		cancelBooking.setFlightId(fetchedFlight.getFlightId());
+		cancelBooking.setCancellingDate(LocalDate.now());
+		cancelBooking.setTravelClass(booking.getTravelClass());
+		cancelBooking.setTicketMailingId(booking.getTicketMailingId());
+		cancelBooking.setJourneyDate(booking.getJourneyDate());
+		cancelBooking.setNoOfPassengers(booking.getNoOfPassengers());
+		cancelBooking.setCost(booking.getCost());
+
+		double cost = booking.getCost();
+		double refund = cost - (cost * 0.25);
+		cancelBooking.setRefund(refund);
+		int noOfPassengers = booking.getNoOfPassengers();
+
+		if (booking.getTravelClass().equalsIgnoreCase("economy")) {
+			fetchedFlight.setEconomySeats(fetchedFlight.getEconomySeats() + noOfPassengers);
+		} else {
+			fetchedFlight.setBusinessSeats(fetchedFlight.getBusinessSeats() + noOfPassengers);
+		}
+		Flight flight = (Flight) dao.save(fetchedFlight);
+		dao.delete(booking);
+
+		CancelBooking cB = (CancelBooking) dao.save(cancelBooking);
+
+		return refund;
+	}
+
+	@Override
+	public List<Booking> fetchBooking(int userId) {
+
+		String fetchedQuery = "select b from Booking b where b.user.userId=:quserId";
+		Query query = entityManager.createQuery(fetchedQuery);
+		query.setParameter("quserId", userId);
+		return query.getResultList();
+	}
 }

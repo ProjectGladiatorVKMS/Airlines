@@ -111,11 +111,24 @@ public class AirlineServiceImpl implements AirlineService {
 		payment.setBooking(booking);
 		payment = (Payment) dao.save(payment);
 	}
+	
+	
 
 	@Override
 	public TicketDT fetchTicket(int bookingId) {
 		TicketDT ticket = airlineDao.fetchTicket(bookingId);
 		return ticket;
+	}
+
+	@Override
+	public double cancelTicket(int bookingId) {
+		double refund = airlineDao.cancelTicket(bookingId);
+		return refund;
+	}
+
+	@Override
+	public List<Booking> fetchBookings(int userId) {
+		return airlineDao.fetchBooking(userId);
 	}
 
 }

@@ -14,6 +14,7 @@ import com.lti.dto.BookingDT;
 import com.lti.dto.SearchFlightsDT;
 import com.lti.dto.StatusDT;
 import com.lti.dto.TicketDT;
+import com.lti.entity.Booking;
 import com.lti.entity.Flight;
 import com.lti.entity.User;
 import com.lti.service.AirlineService;
@@ -52,11 +53,22 @@ public class UserController {
 		airlineService.updateBooking(bookingId);
 		System.out.println(bookingId);
 	}
+	
+	@GetMapping("/fetchBooking")
+	public List<Booking> fetchBookings(@RequestParam("userId") int userId){
+		return airlineService.fetchBookings(userId);
+	}
 
 	@GetMapping("/fetchTicket")
 	public TicketDT fetchTicket(@RequestParam("bookingId") int bookingId) {
 
 		TicketDT ticket = airlineService.fetchTicket(bookingId);
 		return ticket;
+	}
+	
+	@GetMapping("cancelTicket")
+	public double cancelBooking(@RequestParam("bookingId") int bookingId) {
+		double refund = airlineService.cancelTicket(bookingId);
+		return refund;
 	}
 }

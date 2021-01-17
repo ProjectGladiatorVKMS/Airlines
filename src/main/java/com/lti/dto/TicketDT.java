@@ -1,6 +1,13 @@
 package com.lti.dto;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.lti.entity.Passenger;
 
 public class TicketDT {
 
@@ -10,9 +17,13 @@ public class TicketDT {
 	private String destination;
 	private String departureTime;
 	private String arrivalTime;
-	private String journeyDate;
+	
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private Date journeyDate;
 	private String travelClass;
-	private List<String> passengerName;
+	//private List<String> passengerName;
+	private List<Passenger> passengerList; 
 	
 	public TicketDT() {
 	}
@@ -53,10 +64,10 @@ public class TicketDT {
 	public void setArrivalTime(String arrivalTime) {
 		this.arrivalTime = arrivalTime;
 	}
-	public String getJourneyDate() {
+	public Date getJourneyDate() {
 		return journeyDate;
 	}
-	public void setJourneyDate(String journeyDate) {
+	public void setJourneyDate(Date journeyDate) {
 		this.journeyDate = journeyDate;
 	}
 	public String getTravelClass() {
@@ -65,11 +76,19 @@ public class TicketDT {
 	public void setTravelClass(String travelClass) {
 		this.travelClass = travelClass;
 	}
-	public List<String> getPassengerName() {
-		return passengerName;
+	/*
+	 * public List<String> getPassengerName() { return passengerName; } public void
+	 * setPassengerName(List<String> passengerName) { this.passengerName =
+	 * passengerName; }
+	 */
+
+	public List<Passenger> getPassengerList() {
+		return passengerList;
 	}
-	public void setPassengerName(List<String> passengerName) {
-		this.passengerName = passengerName;
+
+	public void setPassengerList(List<Passenger> passengerList) {
+		this.passengerList = passengerList;
 	}
+
 	
 }

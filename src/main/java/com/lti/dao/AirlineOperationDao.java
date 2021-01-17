@@ -15,4 +15,6 @@ public interface AirlineOperationDao {
 	public List<Passenger> fetchPassenger(int bookingId);
 	public Flight fetchFlight(Booking booking);
 	public TicketDT fetchTicket(int bookingId);
+	public double cancelTicket(int bookingId);
+	public List<Booking> fetchBooking(int userId);
 }

@@ -13,6 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="booking_detail")
@@ -36,6 +41,8 @@ public class Booking {
 	private String arrival;
 
 	@Column(name = "journey_date")
+	@Temporal(TemporalType.DATE)
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date journeyDate;
 
 	@Column(name = "no_of_passengers")
@@ -55,16 +62,19 @@ public class Booking {
 
 	@OneToOne
 	@JoinColumn(name = "user_id_fk")
+	@JsonIgnore
 	private User user;
 
 	@OneToOne
 	@JoinColumn(name = "flight_id_fk")
+	@JsonIgnore
 	private Flight flight;
 
 	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
 	private Set<Passenger> passengerList;
 
 	@OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Payment payment;
 
 	public Booking() {
